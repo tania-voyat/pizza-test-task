@@ -52,8 +52,8 @@ const menu = {
 
 function getPizzaInfo(lastPizzas) {
   const popular = [];
-  const ingridients = [];
-  const allIngridients = [];
+  const ingredients = [];
+  const allIngredients = [];
 
   const reducer = function (acc, el) {
     acc[el] = (acc[el] || 0) + 1;
@@ -62,6 +62,7 @@ function getPizzaInfo(lastPizzas) {
 
   const pizzas = lastPizzas.reduce(reducer, {});
 
+  // Sorting most popular pizzas //
   Object.keys(pizzas)
     .sort((a, b) => {
       return pizzas[b] - pizzas[a];
@@ -72,30 +73,32 @@ function getPizzaInfo(lastPizzas) {
       }
     });
 
+  // Looking for ingredients of most popular pizzas //
   Object.entries(menu).map((item) => {
-    const ingridient = Object.keys(item[1]);
+    const ingredient = Object.keys(item[1]);
     if (popular.includes(item[0])) {
-      allIngridients.push(...ingridient);
+      allIngredients.push(...ingredient);
     }
   });
 
-  const pizzasIngridients = allIngridients.reduce(reducer, {});
+  const pizzasIngredients = allIngredients.reduce(reducer, {});
 
-  Object.keys(pizzasIngridients)
+  // Sorting ingredients //
+  Object.keys(pizzasIngredients)
     .sort((a, b) => {
-      return pizzasIngridients[b] - pizzasIngridients[a];
+      return pizzasIngredients[b] - pizzasIngredients[a];
     })
     .map((el) => {
-      ingridients.push(el);
+      ingredients.push(el);
     });
 
-  console.log(popular);
-  console.log(ingridients);
-
-  return {
-    popular,
-    ingridients,
-  };
+  // Inserting result into HTML //
+  document
+    .querySelector("#popular")
+    .insertAdjacentHTML("beforeend", `Popular: ${popular}`);
+  document
+    .querySelector("#ingredients")
+    .insertAdjacentHTML("beforeend", `Ingredients: ${ingredients}`);
 }
 
 getPizzaInfo([
